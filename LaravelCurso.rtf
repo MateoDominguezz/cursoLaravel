@@ -239,13 +239,28 @@ DB::table('users')->insert([\par
 \tab "name"=> "Pedro",\par
 \tab "email" => "pedro@gmail.com",\par
 ]);\par
+
+\pard\sa200\sl276\slmult1\qc\b\par
+\fs36 CRUD, VALIDACION Y SESION\par
+\fs32 Parametro Dinamicos en Rutas\par
+
+\pard\sa200\sl276\slmult1\b0 Esto sirve para poder crear rutas dinamicas, en donde va la url, se pone con \{id\}, esto le dice a la url, che te voy a pasar un valor dinamico. Un ejemplo es:\par
+\b Route::get("/product/\{id\}", [ProductController::class, "getById"])->name("product_id");\b0\par
+Para indicar si queres que el \b atributo \b0 pueda ser \b opcional \b0 se le pone un \b ? \b0 al lado del id: \{id?\}\par
+Para poder \b agarrar \b0 ese \b id\b0 , se tiene que hacer \b desde \b0 el \b controlador\b0 , cuando le indicas a la funcion que se enlaza, \b en \b0 los \b parentesis \b0 va el \b parametro dinamico \b0 en este caso es el $id, ej en el controlador:\par
+\b public function getById($id) \{\par
+\tab $note = Note::findOrFail($id);\par
+          return view("note.id", compact("note"));\par
+\}\par
+\b0 Y para msotrarla en el blade, es como mostrar un dato, asi:\par
+\b\{\{ $note->id \}\}\b0\par
+Si pones que el parametro sea opcional en el controler le tenes que poner un valor por defecto asi:\par
+\b public function index($id = 25)\b0\par
 \par
-\par
-\par
-\par
-\par
-\par
-\par
+
+\pard\sa200\sl276\slmult1\qc\b Crear un dato con CRUD en .blade\b0\par
+
+\pard\sa200\sl276\slmult1\par
 \par
 \fs36\par
 \fs22\par
