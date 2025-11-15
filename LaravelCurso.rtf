@@ -210,6 +210,26 @@ Hay un comando que te ahorra todo estas lineas de codigo utilizando la clase est
 ]);\par
 En este caso, queremos que nos lleve a el index, que ya creamos se pone asi, le decimos que nos rediriga, a el index, que es asi:      \b return redirect()->route("user_index");\par
 \b0\par
+
+\pard\sa200\sl276\slmult1\qc\b Eloquent\b0\par
+
+\pard\sa200\sl276\slmult1 Sirve para poner en el controlador, gracias a eloquent, condiciones en la busqueda de la base de datos (where), un ejemplo, necesitas mostrar solo a los mayores de 18, se puede hacer asi: \b $users = User:where("age",">",18)->get(); \b0 Se utiliza el get, porque el where devueleve un objeto no un array, tambien se pueden poner \b where enlazados\b0 , para poner mas de una consulta, ej: \par
+\b $users = User:where("age",">",18)->where("zip_code", 7400)->get();\b0\par
+Para meter un \b or\b0 , se utiliza el metodo \b orWhere\b0 , que va enlazado al primer where, sirve para decirle que queres que se \b cumpla por lo menos una\b0 : \par
+\b $users = User:where("age",">",18)->orWhere("zip_code", 7400)->get();\b0\par
+Tambien tenes para decirle en que orden queres los datos con el metodo: orderBy(), EJ, los user de mayor a menor:\par
+\b $users = User::where("age",">",17)->orderBy("age","desc")->get();\par
+\b0 Tambien tenes para ponerle un limite a la cantidad de registros que te trae, se hace con la propiedad limit(), ej: los 5 usuarios mas grandes:\par
+\b $users = User::where("age",">",17)->orderBy("age","desc")->limit(5)->get();\b0\par
+Para \b buscar \b0 un unico \b usuario\b0 , atravez de una id, se utiliza \b User::findOrFail(1); o User::find(1), \b0 la diferencia es que el findOrFail si no lo encuentra te manda un mensaje de error. ej:\par
+\b $users= User::findOrFail(1);\b0\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Sql RAW\b0\par
+
+\pard\sa200\sl276\slmult1\par
+\par
+\par
 \par
 \par
 \par

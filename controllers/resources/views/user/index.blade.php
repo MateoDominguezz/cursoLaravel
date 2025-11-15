@@ -7,16 +7,16 @@
     <title>User</title>
 </head>
 <body>
-    @if($users->isEmpty())
-        <h1>No tenes ningun usuario registrado</h1>
-    @else
         <h1>Lista de usuarios:</h1>
+        <ul>
         @foreach ($users as $user)
-            <h2>Nombre: {{ $user->name }} </h2>
-            <h2>Email: {{ $user->email }} </h2>     
+        <li>
+            <h2>Nombre: {{ $user->name }} -- Edad: {{ $user->age }}</h2>
+            <h2>Email: {{ $user->email }} </h2>   
+            <h2>Addres: {{ $user->addres }} -- Code: {{ $user->zip_code }}</h2>
+        </li>   
         @endforeach
-    @endif
-
+        </ul>
     <!-- Otra forma de hacer lo de arriba pero reduciendo codigo
     @forelse ($users as $user )
         <h1>User List</h1>
