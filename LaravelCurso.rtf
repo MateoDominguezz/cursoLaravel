@@ -227,7 +227,18 @@ Para \b buscar \b0 un unico \b usuario\b0 , atravez de una id, se utiliza \b Use
 
 \pard\sa200\sl276\slmult1\qc\b Sql RAW\b0\par
 
-\pard\sa200\sl276\slmult1\par
+\pard\sa200\sl276\slmult1 Sirve para realizar las \b busquedas sin \b0 apoyarse en el \b ORM\b0 , sirve para poder realizar \b consultas SQL\b0 , para utilizar en el controlador se \b debe importar \b0 con use Illuminate\\Support\\Facades\\\b DB\b0 ; . Tenes dos maneras de utilizarlo como insercion o como mostrar datos. Y para poder utilizarlo se utiliza con DB:: , ejemplo:\par
+Para mostrar datos:\par
+\b $users = DB::table("users")\par
+                    ->select(DB::raw("*"))\par
+                    ->get();\par
+\b0 Para insertar datos:\par
+\b DB::insert("INSERT INTO users VALUES .. ");\b0\par
+o tambien hay otra forma mas recomendada para insertar datos asi, esta es con table y insert que es asi:\par
+DB::table('users')->insert([\par
+\tab "name"=> "Pedro",\par
+\tab "email" => "pedro@gmail.com",\par
+]);\par
 \par
 \par
 \par

@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
     public function index()
     {
         // Metodo estatico para recuperar todos los Users
-        $users = User::where("age",">",17)->orderBy("age","desc")->limit(5)->get();
+        //$users = User::where("age",">",17)->orderBy("age","desc")->limit(5)->get();
 
-        //Mostrar un solo usuario por id
-        $userById= User::findOrFail(1);
+        $users = DB::table("users")
+                    ->select(DB::raw("*"))
+                    ->get();
         // Devueleve una vista,
         //pero en esta vista se puede trabajar con los Users 
         return view("user.index", compact("users"));
