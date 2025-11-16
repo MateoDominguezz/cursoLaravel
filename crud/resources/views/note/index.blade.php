@@ -12,27 +12,44 @@
 </div>
 
 <div class="notes-container">
+    <!-- Todas las Notas -->
     @forelse ($notes as $note)
         <div class="card note-card mb-3">
+
+            <!-- Cuerpo de la Nota -->
             <div class="card-body">
+
+                <!-- Titulo de la Nota -->
                 <h5 class="card-title text-primary">
                     <i class="fas fa-sticky-note me-2"></i>
                     {{ $note->title }}
                 </h5>
+                <!-- Descripcion de la Nota -->
                 <p class="card-text text-muted">
                     {{ $note->description}}
                 </p>
+
+                <!-- Acciones de la Nota -->
                 <div class="note-actions">
+                    <!-- Ver la Nota -->
                     <a href="#" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-eye me-1"></i> Ver
                     </a>
-                    <a href="#" class="btn btn-outline-secondary btn-sm">
+                    <!-- Editar la Nota -->
+                    <a href="#" class="btn btn-outline-warning btn-sm">
                         <i class="fas fa-edit me-1"></i> Editar
                     </a>
+                    <!-- Eliminar la Nota -->
+                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                            data-bs-toggle="modal">
+                        <i class="fas fa-trash-alt me-1"></i> Eliminar
+                    </button>
                 </div>
             </div>
         </div>
     @empty
+
+        <!-- Mostrar cuando no haya contenido en las Notas -->
         <div class="empty-state text-center py-5">
             <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
             <h4 class="text-muted">No hay notas creadas</h4>
@@ -41,33 +58,4 @@
     @endforelse
 </div>
 
-<style>
-.notes-container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-.note-card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.note-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-.note-actions {
-    margin-top: 15px;
-}
-.empty-state {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 40px;
-}
-.card-title {
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 10px;
-}
-</style>
-</style>
 @endsection
