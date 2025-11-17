@@ -260,7 +260,19 @@ Si pones que el parametro sea opcional en el controler le tenes que poner un val
 
 \pard\sa200\sl276\slmult1\qc\b Crear un dato con CRUD en .blade\b0\par
 
-\pard\sa200\sl276\slmult1\par
+\pard\sa200\sl276\slmult1 Primero en principal es en el formulario .blade, es crear un formulario normal, con todos los datos que necesita de entrada, adentro del form va el metodo post, pero en el \b action \b0 tenes que \b llamar \b0 a la \b ruta \b0 que va a hacer el post en mi caso es:\line\b <form method="POST" action= "\{\{ route("note_store")\}\}">\par
+\b0 Una vez que haces eso, le tenes que decir al sistema, que ese formulario es propio del sistema, se le tiene que a\'f1adir la directiva: @csrf . Esto lo que hace es que le da un token, que permite identificar el formulario, se tiene que poner, sino no anda el formulario.\par
+En el \b formulario\b0 , para que el metodo pueda \b recibir \b0 los \b valores \b0 de los \b inputs\b0 , hay que ponerle en el \b atributo name \b0 del input, el \b nombre \b0 de el \b atributo de la base de datos\b0 , para que despues lo pueda recibir el metodo.\fs36\par
+\fs32 Ahora tenemos que \b ir \b0 a la \b carpeta \b0 de \b rutas \b0 entrar a \b web\b0 .php y \b crear \b0 la \b ruta \b0 con el metodo estatico \b post\b0 , Route::Post, asi:\par
+\b Route::post("/note/store", ["NoteController::class", "store"])->name("note_store");\b0\par
+Una vez que tenemos eso, tenemos que ir al NoteController y crear el metodo store, para que se pueda almacenar en la base de datos. \par
+Pero esta \b funcion\b0 , necesita \b recepcionar datos\b0 , esto se hace en el parentesis de la funcion, se pone \b (Request $request)\b0 . Esto le dice al \b sistema \b0 que va a ser una \b funcion post\b0 , que va a tener una ruta post, que esta va a estar enviando una peticion al sistema, de esta forma se recepciona el contenido del formulario.\par
+Para \b crear\b0 , se \b utiliza \b0 la funcion estatica \b Note::create\b0 , en esta si vos pones bien todos los nombres en el formulario, con una sola linea de codigo, se guardan los datos, asi:\par
+\b Note::create($request->all());\b0\par
+\par
+\par
+\par
+\par
 \par
 \fs36\par
 \fs22\par

@@ -24,14 +24,11 @@ class NoteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "title" => "required|max:100|min:3",
+            "title" => "required|min:3",
             "description" => "required|min:10"
         ]);
 
-        Note::create([
-            "title" => $validated["title"],
-            "description" => $validated["description"],
-        ]);
+        Note::create($validated);
         
         return redirect()->route("note_index");
     }
