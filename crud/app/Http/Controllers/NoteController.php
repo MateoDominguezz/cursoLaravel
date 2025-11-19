@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NoteRequest\NoteRequest;
 use Illuminate\Http\Request;
 use App\Models\Note;
 use Illuminate\Contracts\View\View;
@@ -30,20 +31,9 @@ class NoteController extends Controller
     }    
 
     // Insertar nota
-    public function store(Request $request): RedirectResponse
+    public function store(NoteRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            "title" => "required|min:3",
-            "description" => "required|min:10"
-        ],[
-            "title.required" => "El campo titulo es obligatorio",
-            "title.min" => "El campo titulo debe tener al menos 3 caracteres",
-            "description.required" => "El campo descripcion es obligatorio",
-            "description.min" => "El campo descripcion debe tener al menos 10 caracteres"
-        ]);
-
-        Note::create($validated);
-        
+        Note::create($request->validated());
         return redirect()->route("note_index");
     }
 
@@ -54,18 +44,9 @@ class NoteController extends Controller
     }
 
     //Actualizar nota
-    public function edit(Request $request, Note $note): RedirectResponse
+    public function edit(NoteRequest $request, Note $note): RedirectResponse
     {
-        $validated = $request->validate([
-            "title" => "required|min:3",
-            "description" => "required|min:10"
-        ],[
-            "title.required" => "El campo titulo es obligatorio",
-            "title.min" => "El campo titulo debe tener al menos 3 caracteres",
-            "description.required" => "El campo descripcion es obligatorio",
-            "description.min" => "El campo descripcion debe tener al menos 10 caracteres"            
-        ]);
-        $note->update($validated);
+        $note->update($request->validated());
         return redirect()->route("note_index");
     } 
 
