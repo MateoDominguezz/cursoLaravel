@@ -2,6 +2,9 @@
 @section("title", "Notas | Index")
 
 @section("content")
+
+<!-- Header -->
+@extends("layouts.header")
 <div class="notes-container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Mis Notas</h2>
@@ -24,26 +27,25 @@
                     <i class="fas fa-sticky-note me-2"></i>
                     {{ $note->title }}
                 </h5>
-                <!-- Descripcion de la Nota -->
-                <p class="card-text text-muted">
-                    {{ $note->description}}
-                </p>
 
                 <!-- Acciones de la Nota -->
                 <div class="note-actions">
                     <!-- Ver la Nota -->
-                    <a href="#" class="btn btn-outline-primary btn-sm">
+                    <a href="{{ route("note_view", $note->id) }}" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-eye me-1"></i> Ver
                     </a>
                     <!-- Editar la Nota -->
-                    <a href="#" class="btn btn-outline-warning btn-sm">
+                    <a href="{{ route("note_update", $note->id) }}" class="btn btn-outline-warning btn-sm">
                         <i class="fas fa-edit me-1"></i> Editar
                     </a>
                     <!-- Eliminar la Nota -->
-                    <button type="button" class="btn btn-outline-danger btn-sm" 
-                            data-bs-toggle="modal">
-                        <i class="fas fa-trash-alt me-1"></i> Eliminar
-                    </button>
+                    <form method="POST" class="d-inline" action="{{ route("note_delete", $note->id) }}">
+                        @csrf
+                        @method("DELETE")
+                        <button type="submit" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal">
+                            <i class="fas fa-trash-alt me-1"></i> Eliminar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -53,7 +55,7 @@
         <div class="empty-state text-center py-5">
             <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
             <h4 class="text-muted">No hay notas creadas</h4>
-            <p class="text-muted">Comienza creando tu primera nota</p>
+            <p class="text-muted">Crea tu primera nota</p>
         </div>
     @endforelse
 </div>

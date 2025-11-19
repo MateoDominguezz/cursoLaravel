@@ -270,11 +270,110 @@ Pero esta \b funcion\b0 , necesita \b recepcionar datos\b0 , esto se hace en el 
 Para \b crear\b0 , se \b utiliza \b0 la funcion estatica \b Note::create\b0 , en esta si vos pones bien todos los nombres en el formulario, con una sola linea de codigo, se guardan los datos, asi:\par
 \b Note::create($request->all());\b0\par
 \par
+
+\pard\sa200\sl276\slmult1\qc\b Editar\b0\par
+
+\pard\sa200\sl276\slmult1\b Primero en web \b0 tenes que tener una \b ruta get\b0 , para poder mostrar el formulario, pero este get, \b necesita \b0 recibir los \b valores \b0 de la \b nota \b0 para poder mostrarlos, esto lo hace para saber que nota queres editar y para mostrar el valor de la nota en los inputs:\line\b Route::get("note/update/\{note\}", [NoteController::class, "update"])->name("note_update");\b0\par
+\b Segundo \b0 tenes que crear la funcion para \b rediriguir a el formuario \b0 con los datos de la nota, esta funcion recibe un parametro nota asi: (Note $note), para poder mostrar la nota asi:\par
+\b public function update(Note $note)\par
+\{\par
+\tab return view("note.update", compact("note"));\par
+\}\par
+\b0 Tercer paso crear el formulario update, una vez que tenemos el formulario, hay que hacer estos pasos: \line\b Primero\b0 : en el action: va la ruta que llama al metodo de actualizar que en este caso es note_edit, este va a tener que llamar a la nota, poniendole una coma en el note_edit, $note->id . Esto se hace asi para decirle a el metodo que nota se va a querer editar. asi quedaria: \b action= "\{\{ route("note_edit", $note->id)\}\}"\par
+\b0 Pero para eso en \b web\b0 , tenes que \b crear \b0 una \b ruta \b0 de metodo \b put\b0 , esto sirve para \b indicarle \b0 a \b laravel \b0 que se va a \b editar \b0 una \b nota\b0 , asi quedaria la  ruta: \b Route::put("note/edit/\{note\}", [NoteController::class, "edit"])->name("note_edit");\par
+Segundo\b0 : Como el metodo editar es PUT, en el formulario lo tenemos que indicar, esto se indica una vez ya creado el formulario, abajo se pone @method("PUT"), Esto le indica a laravel que ese formulario va a ser para editar.\par
+\b Tercero\b0 : A cada campo que tenes un input, y queres que se edite, se le pone en le value el valor de ese campo especifico de la nota un ejemplo del titulo: value="\{\{ $note->title \}\}"\par
+
+\pard\sa200\sl276\slmult1\qc\b Atualizacion de valor (CONTROLLER)\b0\par
+
+\pard\sa200\sl276\slmult1 En el controller tenes que crear el metodo que va a actualizar la nota: Este tiene una particularidad, va a recibir dos parametros, un Request y Note. Asi se va a ver:\par
+public funcion edit(Request $request, Note $note)\line Una vez que tenemos eso, se sigue con los parametros de adentro, el note se utiliza porque laravel en su interior te busca automaticamente la nota. y con el request recolectamos todos los datos de esa nota, para llamar al metodo a actualizar se hace asi:\par
+\b $note->update($request->all());\b0\par
+Esto le indica a laravel que se va a actualizar la nota, con el $request, recolecta todos los datos.\par
+Despues de eso se redirigue al inicio.\par
+asi: return redirect()->route("note_index");\par
+
+\pard\sa200\sl276\slmult1\qc\b\par
+Mostrar por ID\par
+
+\pard\sa200\sl276\slmult1\b0 Primero tenes que crear la ruta, esta ruta va a necesitar el parametro \{note\}. Asi:\par
+Route::get("note/ver/\{note\}", [NoteController::class, "view"])->name("note_view");\par
+Segundo paso: poner el route, para que nos lleve a la vista de la nota en especifico, asi: \par
+href="\{\{ route("note_view", $note->id) \}\}"\par
+Esto lo que le dice a laravel, llevame a esta vista, y pintamela con los valores que tenga esta nota.\par
+Tercer paso: En el controlador crear la funcion view, esta necesita el parametro (Note $note), porque al igual que el update, necesita recolectar la informacion de la nota, que se apriete. ahora se tiene que hacer que se rediriga al view, pero obviamente agregandole la variable $note asi:\par
+return view("note_view", compact("note"));\par
+Cuarto paso: Crear la vista para mostrar la informacion con .blade y para mostrar es lo mismo que se hace con el update, ejemplo:     \{\{$note->title\}\}\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Eliminar\b0\par
+
+\pard\sa200\sl276\slmult1 Para eliminar se tiene que crear un formulario en el boton, porque es el eliminado es una variacion a el create. se utiliza \b el @method("DELETE"). \b0 En el formulario se llama a la funcion que va a eliminar, y se le suma el parametro de nota asi: $note->id. Asi\b : <form method="POST"action="\{\{ route("note_delete", $note->id) \}\}">\b0\par
+Se crea en la web, la ruta con el medoto delete asi:\par
+\b Route::delete("note/delete/\{note\}", [NoteController::class, "delete"])->name("note_delete");\par
+\b0 Y en el controlador como en el update, necesitamos el valor de la nota, gracias a esto podemos utilizar el metodo delete:\par
+\b $note->delete();\par
+\b0 Despues de esto redirigimos a la pnatalla principal con:\par
+\b return redirect()->route("note_index");\b0\par
+Asi quedaria toda la funcion:\par
+\b public function delete(Note $note)\par
+\{\par
+        $note->delete();\par
+        return redirect()->route("note_index");\par
+\}\fs36\par
+
+\pard\sa200\sl276\slmult1\qc\fs32 Funcion :Nombre\b0\par
+
+\pard\sa200\sl276\slmult1 Siempre que se crean funciones en el controler.Esto sirve para decirle a laravel que vas a trabajar y si algun dia cambias el valor que das, te va a advertir laravel, para esto hay que decirle a laravel de que tipo van a ser ej:\par
+Si tenes un redirect:\par
+public function store(Request $request): RedirectResponse\par
+Si retorna una vista:\par
+public function view(Note $note): View\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Validaciones\b0\par
+
+\pard\sa200\sl276\slmult1 Esto sirve para, que cuando vos tengas que recibir algo, el sistema detecte si hay algo en la validacion que el usuario no cumple, El sistema no lo va a guardar en la base de datos. Estas validaciones se ponen en el create y update. Estas validaciones se pueden hacer de dos formas, en el controler o crear otro archivo con todas las validaciones. Primero en el controler:\par
+Se utiliza el metodo validate(), esto sirve para ponerle las validaciones, a cada parametro asi seria:\par
+$validated = $request->validate([\par
+\tab "title" => "required|min:3| max:100",\par
+\tab "description" => "required|min:5"\par
+]);\par
+Para seguir agregandole reglas se utiliza: "|".  \par
+Esto si no se cumple envia un error y lanza un error al sistema, este error se le puede mostrar al usuario.\par
+Opcion 2: La mejor Opcion\par
+Para esta opcion, lo que se hace es que hacemos una Custom Request. Para crear una CustomRequest tenemos que ir a la terminal y crearla, esta se crea con el comando: \par
+\b php artisan make:request Note/NoteRequest\b0\par
+Una ves que estamos en la request, en la funcion que dice, \b authorize(), \b0  Esta funcion lo que hace es que le podes dar permisos dependiendo de que rol cumpla, un ejemplo: si es un administrador, que no le sirva esta autorizacion, esta adentro tiene un return false, este return false, lo cambiamos por un return true; Porque lo puede hacer calquiera en nuestro caso. \par
+En la segunda funcion rules(), aca van nuestras validaciones\par
 \par
 \par
 \par
 \par
-\fs36\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
 \fs22\par
 }
  
