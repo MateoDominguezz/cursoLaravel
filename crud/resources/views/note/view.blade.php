@@ -2,7 +2,6 @@
 @section('title', 'Nota | Ver')
 
 @section('content')
-@extends("layouts.header")
 <div class="note-view-container mt-4">
     <div class="container">
         <!-- Botón volver -->

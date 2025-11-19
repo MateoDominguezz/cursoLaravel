@@ -3,27 +3,9 @@
 @section("title", "Notas | Crear")
 
 @section("content")
-
-<!-- Header -->
-@extends("layouts.header")
-
 <!-- Formulario -->
 <form method="POST" action= "{{ route("note_store")}}" class="container mt-5">
     @csrf
-
-    <!-- Muestra los erorres -->
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <h4>Errores:</h4>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif    
-
-
     <div class="row justify-content-center">
         <div class="col-lg-6">
 
@@ -34,12 +16,18 @@
             <div class="mb-4">
                 <label for="title" class="form-label"><strong>Título</strong></label>
                 <input type="text" class="form-control border-2 py-2" name="title" placeholder="¿De qué se trata tu nota?">
+                @error("title")
+                    <p class="text-danger">{{$message}}</p>
+                @enderror
             </div>
             
             <!-- Descripcion -->
             <div class="mb-4">
                 <label for="description" class="form-label"><strong>Descripcion</strong></label>
                 <textarea class="form-control border-2 limitar-area" name="description" rows="7" placeholder="Ingresa la nota aca"></textarea>
+                @error("description")
+                    <p class="text-danger">{{ $message }} </p>
+                @enderror
             </div>
             
             <!-- Botones-->

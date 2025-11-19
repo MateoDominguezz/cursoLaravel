@@ -2,6 +2,3 @@
 @section("title", "GestionNotas")
 
 @section("content")
-
-<!-- Header -->
-@extends("layouts.header")

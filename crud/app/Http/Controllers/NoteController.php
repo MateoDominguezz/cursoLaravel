@@ -34,7 +34,7 @@ class NoteController extends Controller
     public function store(NoteRequest $request): RedirectResponse
     {
         Note::create($request->validated());
-        return redirect()->route("note_index");
+        return redirect()->route("note_index")->with("success", "Nota creada con exito");
     }
 
     //Formulario de actualizar nota
@@ -47,13 +47,13 @@ class NoteController extends Controller
     public function edit(NoteRequest $request, Note $note): RedirectResponse
     {
         $note->update($request->validated());
-        return redirect()->route("note_index");
+        return redirect()->route("note_index")->with("success", "Se pudo actualizar la nota correctamente");
     } 
 
     //Eliminar Nota
     public function delete(Note $note): RedirectResponse
     {
         $note->delete();
-        return redirect()->route("note_index");
+        return redirect()->route("note_index")->with("success","Se pudo eliminar la nota exitosamente");
     }
 }

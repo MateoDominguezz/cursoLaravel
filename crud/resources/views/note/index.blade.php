@@ -2,9 +2,6 @@
 @section("title", "Notas | Index")
 
 @section("content")
-
-<!-- Header -->
-@extends("layouts.header")
 <div class="notes-container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Mis Notas</h2>

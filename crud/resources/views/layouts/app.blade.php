@@ -15,6 +15,12 @@
     <title>@yield("title")</title>
 </head>
 <body class="">
+    <!-- Nav Bar -->
+    @include("layouts.header")
+
+    <!-- Mensajes -->
+    @include("layouts.flash_messages")
+
     <!-- Contenido -->
     @yield("content")
 </body>

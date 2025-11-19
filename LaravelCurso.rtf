@@ -345,17 +345,56 @@ Opcion 2: La mejor Opcion\par
 Para esta opcion, lo que se hace es que hacemos una Custom Request. Para crear una CustomRequest tenemos que ir a la terminal y crearla, esta se crea con el comando: \par
 \b php artisan make:request Note/NoteRequest\b0\par
 Una ves que estamos en la request, en la funcion que dice, \b authorize(), \b0  Esta funcion lo que hace es que le podes dar permisos dependiendo de que rol cumpla, un ejemplo: si es un administrador, que no le sirva esta autorizacion, esta adentro tiene un return false, este return false, lo cambiamos por un return true; Porque lo puede hacer calquiera en nuestro caso. \par
-En la segunda funcion rules(), aca van nuestras validaciones\par
+En la segunda funcion rules(), aca van nuestras validaciones, aca van todas las validaciones, la sacamos del NoteController y las pasamos aca. Pero para agarrar estos datos validados, en el PostController, primero hay que importarlo con el nombre que tenga y segundo en la funcion create o update van a recibir como parametro el \b NoteRequest $request\b0 , asi:\par
+\b public function store(NoteRequest $request)\b0\par
+Y para usarlo, se utiliza el metodo validated(), que lo que hace es que valida los datos de entrada, ejemplo:\par
+Crear: Note::create($request->validated());\par
+Update: $note->update($request->validated());\par
 \par
+
+\pard\sa200\sl276\slmult1\qc\b Manejo de Acciones\par
+Errores\b0\par
+
+\pard\sa200\sl276\slmult1 Esto sirve para mandarle el error al usuario. Para hacer esto, en el archivo NoteRequest se crea una nueva funcion messages, con todos los mensajes personalizados ej:\par
+    public function messages(): array\par
+    \{\par
+        return [\par
+            "title.required" => "El campo titulo es obligatorio",\par
+            "title.min" => "El campo titulo debe tener al menos 3 \tab\tab   caracteres"\par
+],\par
+\}\par
+Para mostrar estos mensajes, hay que ir a el formulario, para mostrarlos, para el manejo de errores existe la directiva @error().\par
+Para mostrar errores por seccion se utiliza asi, con la variable \b $message\b0 , recolectamos todos los errores y dependiendo de que error queres mostrar, en @error, tenes que especificar de que input estas hablando, un ejemplo del campo titulo:\par
+@error("title")\par
+\tab <p class="text-danger"> \{\{$message\}\}</p>\par
+@enderror\par
+Tambien se pueden poner los errores en un apartado, se utiliza la variable $errors esto es mas general, con un array y mostrarlo en la pantalla asi:\par
+    @if($errors->any())\par
+        <ul>\par
+        @foreach ($errors->all() as $message)\par
+            <li> <p class="text-danger"> \{\{ $message \}\} </p> </li>\par
+        @endforeach()\par
+        </ul>\par
+    @endif\par
 \par
-\par
-\par
-\par
-\par
-\par
-\par
-\par
-\par
+
+\pard\sa200\sl276\slmult1\qc\b Manejo de Acciones\par
+Satisfactoriamente\b0\par
+
+\pard\sa200\sl276\slmult1 Para mostrarle al usuario, cuando realizo la accion bien, se utilizan flash messages, que se muestrar una sola ves cuando hacemos una accion en concreto, Esto se suele aplicar en la base de  tu layout, porque si hay algun mensaje, estes donde estes te lo muestra.\par
+Primero como mandar el mensaje: Para mandar mensajes personalizados, se hace en el controler,utilizando el metodo with("success", "Mensaje de exito"), este se utiliza al finalizar cuando retorna algo un ejemplo para el metodo de crear:\par
+return redirect()->route("note_index")->with("success", "Nota creada con exito");\par
+Como \b mostrarlo \b0 en la \b vista\b0 , se suele crear un archivo solo para los mensajes de exito. Para recibir el mensaje se \b utiliza \b0 el \b metodo get\b0  \b de la session\b0 , que seria asi: \b Session::get()\b0 , y adentro del get se utiliza el \b nombre de la variable\b0  que introduciste en el \b with\b0 , en este caso es el success, y se suele utiliza la directiva \b @if\b0 . Asi quedaria:\par
+\b @if($message= Session::get("success"))\par
+\tab <p> \{\{ $message \}\}</p>\par
+@endif\par
+
+\pard\sa200\sl276\slmult1\qc\par
+Ruta Resources\par
+
+\pard\sa200\sl276\slmult1\b0 Sirve para \b abrebiar \b0 todo el contenido de un \b crud\b0 , de un mismo \b modelo\b0 , se utiliza asi:\par
+\b Route::resource("/post", PostController::class);\b0\par
+Esto lo que le dice a laravel, che creame una ruta para el crud, estas rutas se pueden ver con: \b php artisan route:list\b0\par
 \par
 \par
 \par
