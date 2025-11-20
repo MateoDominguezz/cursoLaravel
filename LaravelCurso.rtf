@@ -395,8 +395,12 @@ Ruta Resources\par
 \pard\sa200\sl276\slmult1\b0 Sirve para \b abrebiar \b0 todo el contenido de un \b crud\b0 , de un mismo \b modelo\b0 , se utiliza asi:\par
 \b Route::resource("/post", PostController::class);\b0\par
 Esto lo que le dice a laravel, che creame una ruta para el crud, estas rutas se pueden ver con: \b php artisan route:list\b0\par
-\par
-\par
+Para que laravel te cree automaticamente todas las funciones de el crud en el controler se utiliza --resource abreviado es -R\par
+Asi seria el comando:\par
+php artisan make:model Product -mcrR o lo mismo:\par
+php artisan make:model Product -a\par
+Y con Form Request:\par
+php artisan make:model Product -a --request\par
 \par
 \par
 \par

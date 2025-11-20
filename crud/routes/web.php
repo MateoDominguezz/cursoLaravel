@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 //Ruta de inicio
 Route::view("/", "index")->name("index");
 
-/* Ruta para resumir todo lo de abajo
+/* Ruta para resumir todo lo de abajo */
 Route::resource("/post", PostController::class);
-*/
+
 
 // Ruta para ver todos las Notas
 Route::get("/note", [NoteController::class, "index"])->name("note_index");
