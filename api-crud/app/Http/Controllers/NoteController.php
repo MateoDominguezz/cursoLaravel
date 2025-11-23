@@ -2,63 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\NoteRequest;
+use App\Models\Note;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class NoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        return response()->json(Note::all(),200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(NoteRequest $request): JsonResponse
     {
-        //
+        $note= Note::create($request->validated());
+        return response()->json([
+            "succes"=> "true",
+            "data" => $note
+        ], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(string $id): JsonResponse
     {
-        //
+        $note = Note::find($id);
+        return response()->json($note, 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(NoteRequest $request, string $id): JsonResponse
     {
-        //
+        $note = Note::find($id);
+        $note->update($request->validated());
+
+        return response()->json([
+            "success" => true,
+            "data" => $note
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
-    }
+        $note= Note::find($id);
+        $note->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            "success" => true,
+            "data" => $note
+        ], 200);
     }
 }
