@@ -403,10 +403,17 @@ Y con Form Request:\par
 php artisan make:model Product -a --request\par
 \par
 
-\pard\sa200\sl276\slmult1\qc\b Api\b0\par
+\pard\sa200\sl276\slmult1\qc\b Api Resource\b0\par
 
-\pard\sa200\sl276\slmult1\par
-\par
+\pard\sa200\sl276\slmult1 Esto sirve para poder \b modificar \b0 el \b contenido \b0 de lo que te devuelve el getAll de la api. Para hacer esto se tiene que crear el recurso:  \b php artisan make:resource NoteResource\b0\par
+Aca podemos poner como queres que se devuelvan los datos, si normales o con algo mas incluido, hasta podes agregar mas campos. Un ejemplo en NoteResource:\par
+return [\par
+            "id" => $this->id,\par
+            "title" => "Titulo: ". $this->title,\par
+            "description" => $this->description,\par
+            "example" => "This is an example"\par
+];\par
+Y para poder mostrar esto en el NoteController se tiene que importar el NoteResource, una vez hecho eso, se va a la funcion index y le decimos que va a devolver un JsonResource, y tambien cambiamos como se va a devolver la informacion, se va a devolver asi: return NoteResource::collection(Note::all());\par
 \par
 \par
 \par
