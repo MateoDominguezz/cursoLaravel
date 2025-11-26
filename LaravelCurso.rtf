@@ -413,7 +413,64 @@ return [\par
             "description" => $this->description,\par
             "example" => "This is an example"\par
 ];\par
-Y para poder mostrar esto en el NoteController se tiene que importar el NoteResource, una vez hecho eso, se va a la funcion index y le decimos que va a devolver un JsonResource, y tambien cambiamos como se va a devolver la informacion, se va a devolver asi: return NoteResource::collection(Note::all());\par
+Y para poder mostrar esto en el NoteController se tiene que importar el NoteResource, una vez hecho eso, se va a la funcion index y le decimos que va a devolver un JsonResource, y tambien cambiamos como se va a devolver la informacion, se va a devolver asi: return NoteResource::collection(Note::all())\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Seeder\b0\par
+
+\pard\sa200\sl276\slmult1 Sirve para darle un poblado inicial, para poder arrancar con el sistema. Se suele utilizar para darle los primeros datos que sean si o si necesarios para poder utilizar el sistema\par
+Para poder crear un seeder se utiliza el comando: \par
+\b php artisan make:seeder ProductSeeder\b0\par
+Para poder crear datos, en ProductSeeder se importa el modelo Product, y una vez ahi, en la funcion run(), se pone los productos a crear asi:\par
+Product::create([\par
+            "nombre" => "Example",\par
+            "descripcion_corta" => "Loren Ipsum ZUndada",\par
+            "descripcion" => "Loren IpsumLoren Ipsum Loren Ipsum",\par
+            "precio" => 30\par
+]);\par
+Para que se pueda ejecutar el seeder, se tiene que indicar que lo queres correr en el databaseSeeder. Adentro de la funcion run(), se pone los seeders que queres llamar con el metodo call, asi es:                          $this->call([\par
+           ProductSeeder::class\par
+]);\par
+Para poder ejecutar el seeder se tiene que poner este comando en la terminal: \b php artisan db:seed\b0\par
+Para utilizar un seeder en concreto se utiliza el comando:\par
+\b php artisan db:seed --class=ProductSeeder\b0\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Factories\b0\par
+
+\pard\sa200\sl276\slmult1 Para generar un factory es: \par
+\b php artisan make:factory ProductFactory\b0\par
+Adentro de la funcion definition(), se ponen los atributos que tenes para rellenar, hay varias formas de rellenar con datos, la primera es con cosas random, sin sentido, que es la que voy a poner el ejemplo ahora, para poner Str, se tiene que importar con esta linea: \b use Illuminate\\Support\\Str; EJ:\b0\par
+return [\par
+            "nombre" => Str::random(20),\par
+            "descripcion_corta" => Str::random(50),\par
+            "descripcion" => Str::random(150),\par
+            "precio" => random_int(1,200),\par
+];\par
+Y para poder ejecutar esto, se va en el seeder de la clase, en este casi es ProductSeeder, y adentro de la funcion se pone: \par
+Product::factory()->count(3)->create();\par
+Y para hacer que esto funcione se pone en la terminal el mismo comando para ejecutar el seeder que es: \b php artisan db:seed\b0\par
+Para darle un poco de sentido al contenido que queres que se cree, se utiliza faker.\par
+Para utilizar esto, se pone fake(). Este tiene varios metodos incluidos como el:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 name(): Genera un nombre aleatorio\par
+{\pntext\f1\'B7\tab}sentence(): Genera una frase\par
+{\pntext\f1\'B7\tab}email(): Genera un email\par
+{\pntext\f1\'B7\tab}unique(): Pide que sea unico\par
+{\pntext\f1\'B7\tab}address(): Genera una direccion\par
+{\pntext\f1\'B7\tab}lastname(): Genera un apellido\par
+{\pntext\f1\'B7\tab}numberBetween(1,200): Genera un numero dependiendo de que le pongas\par
+
+\pard\sa200\sl276\slmult1 Ejemplo funcionando:\par
+return [\par
+            "nombre" => fake()->name(),\par
+            "descripcion_corta" => fake()->sentence(),\par
+            "descripcion" => fake()->text(),\par
+            "precio" => fake()->numberBetween(1,200),\par
+];\par
+
+\pard\sa200\sl276\slmult1\par
+\par
 \par
 \par
 \par
