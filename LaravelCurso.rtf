@@ -468,13 +468,46 @@ return [\par
             "descripcion" => fake()->text(),\par
             "precio" => fake()->numberBetween(1,200),\par
 ];\par
+\par
 
-\pard\sa200\sl276\slmult1\par
+\pard\sa200\sl276\slmult1\qc\b Relaciones\par
+1 A 1\b0\par
+
+\pard\sa200\sl276\slmult1 Para generar relaciones primero se tiene que crear la migracion, para poder decir que tenes una clave foranea se utiliza, foreignID y adentro de este va el nombre de la tabla con _id, despues se enlaza con contrained(), que le dice: che la tabla es users y la columna es id, y si queres que cuando se elimine un usuario se elimine automaticamente el telefono se utiliza onDeletes("cascade") y para que sea de uno a uno se utiliza unique("user_id"), asi quedaria: \par
+ // Clave Foranea\par
+$table->foreignId("user_id")\par
+            ->constrained()\par
+             ->onDelete("cascade");\par
+$table->unique("user_id");\par
 \par
+Pero para que sea de uno a uno, en el modelo que no contiene la clave foranea, en este caso es el usuario, se tiene que crear una funcion con el nombre de la tabla que se va a relacionar en  este caso phone, en esta funcion retornamos que el usuario solo va a tener un solo telefono con \b HasOne\b0 , asi:\par
+\b return $this->HasOne(Phone::class); \par
+\b0 Una vez que tenemos esto, en el modelo de Phone, tambien se tiene que especificar, pero en este caso es belongsTo, esto quiere decir que pertenece al usuario, asi quedaria:\par
+\b public function user(): BelongsTo\par
+\{\par
+    return $this->belongsTo(User::class);\par
+\}\par
+\b0 Para recuperar estos datos relacionados primero en el controller de user, se ahce todo normal, como ya lo vimos antes, en el front para acceder a los datos del telefono, se tiene que llamar a la clase asi: \b\{\{$user->phone->telefono\}\}\b0 ,\b  \b0 ejemplo practico, simulamos que esta adentro de un forEach de user, para ver el telefono asi se  haria:\par
+\b @if ($user->phone)\par
+\tab <i class="bi bi-phone-fill me-1 text-success"></i> \{\{ $user->phone->telefono \}\}\par
+@else\par
+\b0 Tambien se puede acceder de el lado del telefono asi: \{\{$phone->user->email\}\}\par
 \par
-\par
-\par
-\par
+
+\pard\sa200\sl276\slmult1\qc\b 1 a MUCHOS\b0\par
+
+\pard\sa200\sl276\slmult1 Lo voy a seguir con el ejemplo del telefono y del usuario. Que quiere decir 1 a muchos, que un usuario puede tener mas de un telefono, pero este telefono solo puede tener un solo usuario. Para modificar esto, en el modelo de Phone queda todo igual, que un telefono pertenece a un usuario, donde cambia es en el User, aca se utiliza \b HasMany\b0 . Asi quedaria:\par
+\b public function phones() : HasMany\par
+\{\par
+    return $this->hasMany(Phone::class);\par
+\}\par
+\b0 Y para mostrarlo en la vista es asi:\par
+\b @if ($user->phones)\par
+    @foreach ($user->phones as $phone)\par
+    <i class="bi bi-phone-fill me-1 text-success"></i> \{\{ $phone->telefono \}\}\par
+    @endforeach\par
+@endif\par
+\b0\par
 \par
 \par
 \par
