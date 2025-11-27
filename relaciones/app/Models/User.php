@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -52,5 +53,10 @@ class User extends Authenticatable
     public function phones() : HasMany
     {
         return $this->hasMany(Phone::class);
+    }
+
+    public function rols(): BelongsToMany
+    {
+        return $this->belongsToMany(Rol::class)->withPivot("agregado_por");
     }
 }
