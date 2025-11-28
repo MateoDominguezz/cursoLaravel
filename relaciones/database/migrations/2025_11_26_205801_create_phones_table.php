@@ -28,6 +28,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Eliminar Claves Foraneas
+        Schema::table('sims', function (Blueprint $table) {
+            $table->dropForeign(['phone_id']);
+        });
+
+        //Elimianr Tabla Phone
         Schema::dropIfExists('phones');
     }
 };

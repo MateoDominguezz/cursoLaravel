@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rols', function (Blueprint $table) {
+        Schema::create('sims', function (Blueprint $table) {
             $table->id();
-            $table->string("name", 30);
+            $table->string("numero_serial");
+            $table->string("compania");
+            $table->foreignId("phone_id")
+                  ->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,10 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rols_users', function (Blueprint $table) {
-            $table->dropForeign(['rol_id']);
-        });
-        
-        Schema::dropIfExists('rols');
+    // Eliminar Tabla Sims
+    Schema::dropIfExists('sims');
     }
 };
