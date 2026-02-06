@@ -59600,13 +59600,39 @@ Ahora hay que ir al modelo polimorfico, en este caso es la imagen, se le pone mo
 \{\par
     return $this->morphOne(Image::class, "imageable");\par
 \}\par
+
+\pard\sa200\sl276\slmult1\qc Middleware\b0\par
+
+\pard\sa200\sl276\slmult1 Es el que permite poder poner unas restricciones a ciertas rutas, dependiendo del problema\par
+Para poder \b crear \b0 un middleware se utiliza el comando \b php artisan make:middleware\b0\par
+Para poder usar el middleware, este tiene que \b estar en el entorno\b0 , para poder hacer esto tenes que ir a la carpeta: \b bootstrap/app.php\b0\par
+aca se encuentran los middlewares, para poder registrar el middleware, en app.php, adentro de la funcion withMiddleware, se pone este comando:\par
+\b $middleware->alias([]);\b0\par
+Gracias a este comando podemos llamar a los middlewares, asi:\par
+\b $middleware->alias([\par
+\tab "example" => App\\Http\\Middleware\\Example::class\par
+]);\par
+\'bfComo proteger a una ruta?\b0\par
+Se puede hacer de varias formas:\par
+Primera forma es por \b inyectando el middleware a la ruta\b0  asi:\par
+\b Route::middleware("example")->get("/", [ExampleController::class, "index"]);\par
 \b0\par
-\par
-\par
-\par
-\par
-\par
-\par
+Segunda forma es haciendo \b grupo de rutas\b0 , para no andar repitiendo el middleware, asi se hace:\par
+\b Route::middleware("example")->group([\par
+\tab Route::get("/", [Example::class, "test"])\par
+]);\par
+\b0 Para poner \b mas de un middleware se utiliza un array\b0  adentro de middleware asi:\par
+Route::middleware(["example", "isAuth"])->group([\par
+\tab Route::get("/", [Example::class, "test"])\par
+]);\par
+Si queres que alguna \b ruta \b0 de tu grupo \b no utilize algun middleware \b0 se utiliza: \b withoutMiddleware("example"), \b0 asi quedaria:\par
+\b Route::get("/", [Example::class, "test"])->withoutMiddleware("example")\b0\line\par
+Tercera forma de poner un middleware, esta forma se puede hacer aplicando el \b middleware directo en el controlador\b0 , para utilizar esto, tenes que \b crear el constructor \b0 y ponerle adentro el middleware asi:\par
+\b public function __construct()\par
+\{\par
+\tab $this->middleware("text");\par
+\}\par
+\b0 Con esto lo que hacemos es que \b todas las funciones \b0 que pongamos adentro \b van a estar proteguidas\b0\par
 \fs22\par
 }
  
