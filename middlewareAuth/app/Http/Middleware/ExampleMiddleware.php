@@ -12,7 +12,7 @@ class ExampleMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
-        return redirect()->route("noAccess");
-        //return $next($request);
+        //return redirect()->route("noAccess");
+        return $next($request);
     }
 }
