@@ -475,7 +475,7 @@ return [\par
 \pard\sa200\sl276\slmult1\qc\b Relaciones\par
 1 A 1\b0\par
 
-\pard\sa200\sl276\slmult1 Para generar relaciones primero se tiene que crear la migracion, para poder decir que tenes una clave foranea se utiliza, foreignID y adentro de este va el nombre de la tabla con _id, despues se enlaza con contrained(), que le dice: che la tabla es users y la columna es id, y si queres que cuando se elimine un usuario se elimine automaticamente el telefono se utiliza onDeletes("cascade") y para que sea de uno a uno se utiliza unique("user_id"), asi quedaria: \par
+\pard\sa200\sl276\slmult1 Para generar relaciones primero se tiene que crear la migracion, para poder decir que tenes una clave foranea se utiliza, \b foreignID\b0  y adentro de este va el nombre de la tabla con _id, despues se enlaza con contrained(), que le dice: che la tabla es users y la columna es id, y si queres que cuando se elimine un usuario se elimine automaticamente el telefono se utiliza \b onDeletes("cascade") \b0 y para que sea de uno a uno se utiliza unique("user_id"), asi quedaria: \par
  // Clave Foranea\par
 $table->foreignId("user_id")\par
             ->constrained()\par
@@ -484,12 +484,12 @@ $table->unique("user_id");\par
 \par
 Pero para que sea de uno a uno, en el modelo que no contiene la clave foranea, en este caso es el usuario, se tiene que crear una funcion con el nombre de la tabla que se va a relacionar en  este caso phone, en esta funcion retornamos que el usuario solo va a tener un solo telefono con \b HasOne\b0 , asi:\par
 \b return $this->HasOne(Phone::class); \par
-\b0 Una vez que tenemos esto, en el modelo de Phone, tambien se tiene que especificar, pero en este caso es belongsTo, esto quiere decir que pertenece al usuario, asi quedaria:\par
+\b0 Una vez que tenemos esto, en el modelo de \b Phone\b0 , tambien se tiene que especificar, pero en este caso es \b belongsTo\b0 , esto quiere decir que \b pertenece al usuario\b0 , asi quedaria:\par
 \b public function user(): BelongsTo\par
 \{\par
     return $this->belongsTo(User::class);\par
 \}\par
-\b0 Para recuperar estos datos relacionados primero en el controller de user, se ahce todo normal, como ya lo vimos antes, en el front para acceder a los datos del telefono, se tiene que llamar a la clase asi: \b\{\{$user->phone->telefono\}\}\b0 ,\b  \b0 ejemplo practico, simulamos que esta adentro de un forEach de user, para ver el telefono asi se  haria:\par
+\b0 Para recuperar estos datos relacionados primero en el controller de user, se hace todo normal, como ya lo vimos antes, en el front para acceder a los datos del telefono, se tiene que llamar a la clase asi: \b\{\{$user->phone->telefono\}\}\b0 ,\b  \b0 ejemplo practico, simulamos que esta adentro de un forEach de user, para ver el telefono asi se  haria:\par
 \b @if ($user->phone)\par
 \tab <i class="bi bi-phone-fill me-1 text-success"></i> \{\{ $user->phone->telefono \}\}\par
 @else\par
@@ -34280,7 +34280,7 @@ ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000040000002701ffff
 
 \pard\sa200\sl276\slmult1 Esta relacion, el user, esta relacionado al phone y el phone a sim, pero el user no esta relacionado con sim, es una relacion 1 a 1 pero el usuario no puede ver la tabla sim, porque no es una tabla directa, pero como existe una relacion como el phone, se puede crear una relacion de paso para poder acceder desde el user gracias al phone a la tabla sim.\par
 \par
-Se crea como todo, peroa aca en el modelo de phone, se crea una funcion que diga HasOne, porque la clave foranea esta en la sim no en el telefono, asi quedaria:\par
+Se crea como todo, pero aca en el modelo de phone, se crea una funcion que diga HasOne, porque la clave foranea esta en la sim no en el telefono, asi quedaria:\par
 public function sim(): HasOne\par
 \{\par
     return $this->HasOne(Sim::class);\par
@@ -59640,9 +59640,23 @@ Tercera forma de poner un middleware, esta forma se puede hacer aplicando el \b 
 \pard\sa200\sl276\slmult1 Para realizar la autenticacion vamos a \b usar breeze\b0 , lo que hace esto es que hay muchas funciones que ya estan armadas y sirve para hacer un desarrollo en monolito (con vista). Para poder descargarlo se pone en la consola: \b composer required laravel/breeze --dev\b0 , una vez que ya tenemos esto se tiene que \b descargar el paquete \b0 para \b poder usar blade \b0 con el comando: \b php artisan breeze:install\b0\par
 Descargando esto, te crea vistas con blade, que sirven para login y register, ahorrandote mucho tiempo\par
 \par
+
+\pard\sa200\sl276\slmult1\qc\b Livewire\b0\par
+
+\pard\sa200\sl276\slmult1 Sirve para darle reactividad a laravel, que quiere decir esto, que siempre que nosotros en laravel queremos que acceda al back o haga algo, este siempre va a tener una ruta, gracias a Livewire ya no vamos a tener que crear una ruta y podemos crear componentes que estos componentes van a generar la reactividad sin necesidad de refrescar la pagina.\par
+Para poder utilizar livewire se necesita descargarlo, para poder usarlo se tiene que crear en las vistas una nueva carpeta llamada layouts que esta va a tener un archivo app.blade.php, que en esta le tenemos que decir que se van a usar livewire. En el head de html tenemos que poner \b @livewireStyles \b0 y adentro del body se tiene que poner \b @livewireScripts\b0\par
+Para crear un componente de livewire se tiene que poner en la consola: \b php artisan make:livewire Componente\par
+\b0 Se nos van a crear dos carpetas un en app/livewire, en esta vamos a tener la logica del controladory otra en resources/views/components, que aca va la vista\par
+Una vez que tenemos esto para mostrar el componente en una page, se utiliza: @livewire("Componente").\par
+Esto tiene hooks que lo que hace esto es ponerle funciones al componente dependiendo de si fue recien creado, modificado. Como ser la funcion \b mount() \b0 le podes dar valores cuando se monta.\par
 \par
-\par
-\par
+
+\pard\sa200\sl276\slmult1\qc\b FILE STORAGE\b0\par
+
+\pard\sa200\sl276\slmult1 Tenes dos formas de almacenar las imagenes o archivos que te manda el usuario, la primera es almacenandolo con el hosting, que es la mas normal cuando no tenes un flujo de muchas personas. La segunda es para ya cuando queremos tener un sistema escalable y se necesite mucho espacio con los archivos, lo que se hace es derivar todos los archivos a un \b cdn \b0 externo, te permite almacenar todos esa informacion. Nunca se guardan las imagenes o archivos en la base de datos.\par
+Hay que tener en cuenta si estas imagenes o archivos vos queres que las vea el usuario o no, por eso existen dos tipos el publico, que es para que el usuario las vea y el privado, que este es para que te lo mande el usuario y no se vea mas, ejemplo: para verificar su identidad que te envia una foto de su dni.\par
+Una vez que ya tenemos el proyecto en laravel, los archivos o imagenes se van a almacenar en la carpeta storage. En la carpeta storage/app/public aca se guarda todos los ficheros.\par
+Para decirle al sistema que se va a guardar una imagen o archivo, se utiliza un campo de tipo string, en este se guarda la url, para despues poder mostrarla\par
 \par
 \par
 \par
