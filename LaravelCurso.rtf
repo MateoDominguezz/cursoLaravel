@@ -59656,7 +59656,46 @@ Esto tiene hooks que lo que hace esto es ponerle funciones al componente dependi
 \pard\sa200\sl276\slmult1 Tenes dos formas de almacenar las imagenes o archivos que te manda el usuario, la primera es almacenandolo con el hosting, que es la mas normal cuando no tenes un flujo de muchas personas. La segunda es para ya cuando queremos tener un sistema escalable y se necesite mucho espacio con los archivos, lo que se hace es derivar todos los archivos a un \b cdn \b0 externo, te permite almacenar todos esa informacion. Nunca se guardan las imagenes o archivos en la base de datos.\par
 Hay que tener en cuenta si estas imagenes o archivos vos queres que las vea el usuario o no, por eso existen dos tipos el publico, que es para que el usuario las vea y el privado, que este es para que te lo mande el usuario y no se vea mas, ejemplo: para verificar su identidad que te envia una foto de su dni.\par
 Una vez que ya tenemos el proyecto en laravel, los archivos o imagenes se van a almacenar en la carpeta storage. En la carpeta storage/app/public aca se guarda todos los ficheros.\par
-Para decirle al sistema que se va a guardar una imagen o archivo, se utiliza un campo de tipo string, en este se guarda la url, para despues poder mostrarla\par
+Para decirle al sistema que se va a guardar una imagen o archivo, se utiliza un campo de tipo string, en este se guarda la url, para despues poder mostrarla.\par
+A nivel controller se tienen que seguir los mismos pasos salvo en el store (guardar), porque se le debe asignar un nombre a el archivo unico, esto se hace asi: $fileName = time().".".$request->file->extension(); Esto sirve para decirle al sistema: voy a guardar una imagen que se va a crear con un nombre dependiendo de el tiempo que se suba y va a tener la extension que tenga el archivo, si es un jpg, va a terminar con un .jpg.\par
+Una vez que tenemos eso, se tiene que mover el archivo al storage con la siguiente linea de codigo: $reques->file->move(public_path("images")), $fileName); Una vez que tenemos esto hay que decirle al storage que lo cree, asi:\par
+$info = new Info;\par
+$info->name = $request->nombre;\par
+$info->file_url = $fileName;\par
+$info->save();\par
+return redirect()->route("index.info");\par
+Ahora para mostrar en pantalla se utiliza asi:\par
+<img src="\{\{ asset("images/".$info->file_url) \}\}"/>\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Localizacion / No terminado\b0\par
+
+\pard\sa200\sl276\slmult1 Sirve para poder cambiarle el idioma dependiendo de que parte del mundo esten utilizando el sistema.\par
+Directorio lang donde se van a ubicar cada una de las traducciones, cada carpeta con su respectivo lenguaje y dentro todos tienen que contener el mismo numero de ficheros, con el mismo nombres, donde cada uno debe tener las mismas claves, pero cada uno va a tener una traduccion distinta.\par
+Para configurarlo tenemos que ir a la carpeta config\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Mailable\b0\par
+
+\pard\sa200\sl276\slmult1 Sirve para poder mandar e-mails a los usuarios del sistema.\par
+Hay varios tipos de e-mail, por eso hay que crear una clase para poder gestionar el envio de mail llamada MailableMails, Cada tipo de mail tiene que tener su respectiva clase. Para poder crear una clase se crea con este comando:                                  php artisan make:mail ExampleMail\par
+Cuando se crea la clase ExampleMail se puede ver que hay 4 funciones adentro.\par
+1- \b __construct()\b0 : Aca es donde se le asignan parametros al mail\par
+2- \b envelope()\b0 : Aca va el asunto, la persona que envia el mail, toda la informacion adicional que va en todo el mail\par
+3- \b content()\b0 : Es la que se encarga de establecer el cuerpo del mail, esto se suele hacer por una vista, asi se le puede dar estilos al mail\par
+4- \b attachment()\b0 : Esta es la funcion que se va a encargar de enviar los adjuntos, aca se pueden enviar archivos\par
+\par
+En el construct se le asignan los parametros que se van a necesitar de forma dinamica para darle esa diferenciacion a cada plantilla, dependiendo de quien sea el usuario.\par
+Para asignar los parametros se ponen adentro del () de construct, estos parametros tienen que ser publicos, para que se puedan utilizar en las otras funciones mateoej:\par
+public function __construct(public $name)\{\}\par
+Adentro de envelop() puede ir el from, que aca va quien envia el mail, pero primero tenemos que ir a configurar las variables de entrorno (env), y poner el mail y el nombre de la persona que va a enviar el mail, adentro de from va:\line from: new Address(env("MAIL_FROM_ADDRESS"), env("MAIL_FROM_NAME")),\par
+SI LOS NOMBRES DE LAS VARIABLES DE ENTORNO YA ESTAN CONFIGURADAS, NO HACE FALTA PONER EL FROM, ESTO LARAVEL LO HACE AUTOMATICAMENTE\par
+Para crear la vista que se va a mandar en el mail, se recomieda poner los estilos adentro de esta, no se recomienda importar estilos. \par
+Una vez que ya tenemos la vista, en la funcion que tenemos en el mailController en mailMe, Aca es donde se pone toda la logica, a quien se lo vamos a enviar y si en el constructor de ExampleMail tenes parametros se tienen que agregar aca, en este caso lo hacemos manual, un ejemplo:\par
+public function mailMe()\par
+\{\par
+\tab Mail::to("mateodominguez83@yahoo.com", "Mateo Dominguez")->send(new ExampleMail("Mateo"));\par
+\}\par
 \par
 \par
 \par
