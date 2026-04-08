@@ -59691,11 +59691,50 @@ public function __construct(public $name)\{\}\par
 Adentro de envelop() puede ir el from, que aca va quien envia el mail, pero primero tenemos que ir a configurar las variables de entrorno (env), y poner el mail y el nombre de la persona que va a enviar el mail, adentro de from va:\line from: new Address(env("MAIL_FROM_ADDRESS"), env("MAIL_FROM_NAME")),\par
 SI LOS NOMBRES DE LAS VARIABLES DE ENTORNO YA ESTAN CONFIGURADAS, NO HACE FALTA PONER EL FROM, ESTO LARAVEL LO HACE AUTOMATICAMENTE\par
 Para crear la vista que se va a mandar en el mail, se recomieda poner los estilos adentro de esta, no se recomienda importar estilos. \par
-Una vez que ya tenemos la vista, en la funcion que tenemos en el mailController en mailMe, Aca es donde se pone toda la logica, a quien se lo vamos a enviar y si en el constructor de ExampleMail tenes parametros se tienen que agregar aca, en este caso lo hacemos manual, un ejemplo:\par
+Una vez que ya tenemos la vista, en la funcion que tenemos en el mailController en mailMe, Aca es donde se pone toda la logica, a quien se lo vamos a enviar y si en el constructor de ExampleMail tenes parametros se tienen que agregar aca, en este caso lo hacemos manual, y si tendrias que enviar archivos adentro del mail, iria la funcion attach, un ejemplo:\par
 public function mailMe()\par
 \{\par
-\tab Mail::to("mateodominguez83@yahoo.com", "Mateo Dominguez")->send(new ExampleMail("Mateo"));\par
+\tab Mail::to("mateodominguez83@yahoo.com", "Mateo Dominguez")->send(new ExampleMail("Mateo"))->attach($File);\par
 \}\par
+Ahora hay que configurar el entorno para generar los mails, para poder configuarar tenes que ir a dentro de config/mails.php ahi esta todo y despues configurar el .env, que ahi es donde se pone que tipo de empresa vas a contratar\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b Events y Listeners\b0\par
+
+\pard\sa200\sl276\slmult1\b Events\b0 : Estos eventos actuan como un contenedor de informacion, por si solos no hacen nada, es como: "Paso algo" gracias a el \b dispatcher\b0\par
+\b Listeners\b0 : Es la clase que se queda esperando cuando el evento actue, este se ejecuta automaticamente\par
+Esto se hace para tener una comunicacion desacoplada entre diferentes parte entre codigos\par
+Para crear un evento se pone en la consola:\par
+php artisan make:event CreateOrderEvent\par
+Para crear un listener es:\par
+php artisan make:listener GenerateInvoiceListener\par
+1ero Event:\par
+La funcion __construct(): Es la q va a resepcionar los elementos del objeto, para poder crear el evento, para ponerles los argumentos que va a recibir se hace adentro del constructor asi:\par
+public function __construct(public $order) \{\}\par
+la funcion broadcastOn: Es la que indica donde se va a estar transmitiendo nuestro contenido, seria el canal, para que todos los listener que esten escuchando el canal cuando se publique una orden se activen\par
+\par
+2do Listener:\par
+Hay dos funciones la 1era:\par
+__construct(): Va a ejecutarse cuando estemos recepcionando la informacion del contenido\par
+handle(): Es la que te permite ejecutar las acciones, \b adentro del parentesis va el evento\b0 , sino este no anda ejemplo de creacion de una factura:\par
+    public function handle(\b CreateOrderEvent \b0 $event): void\par
+    \{\par
+        Invoice::create([\par
+            "amount" => $event->order->amount,\par
+            "order_id" => $event->order->id\par
+        ]);\par
+    \}\par
+Una vez que tenemos todo esto, hay que registrarlos en el sistema, se llama proveer los eventos y listener a nuestra aplicacion. Esto se hace en EventServiceProviders. Esto ya no hace falta, lo hace automaticamente laravel, para ver si esta: \b php artisan event:list\b0\par
+Ahora hay que indicarle al sistema cuando debe actuar, por eso adentro de la funcion va el nombre de el evento con dispatch y el nombre de la variable para que pueda actuar asi iria en el controller:\par
+\fs28     public function create()\par
+    \{\par
+        $order = Order::create([\par
+            "user_id" => 10,\par
+            "amount" => 25\par
+        ]);\par
+        \b CreateOrderEvent::dispatch($order);\b0\par
+    \}\par
+\fs32\par
 \par
 \par
 \par
